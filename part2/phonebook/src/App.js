@@ -36,6 +36,7 @@ const App = () => {
       personService
         .create(newPerson)
         .then((data) => {
+          console.log(data);
           setPersons(persons.concat(data));
           setNewName("");
           setNewNumber("");
@@ -47,7 +48,7 @@ const App = () => {
         })
         .catch((error) => {
           setMessage({
-            message: `Failed to add ${newPerson.name}`,
+            message: `Failed to add ${newPerson.name}, Error: ${error.response.data.error}`,
             type: "error",
           });
           setTimeout(() => setMessage(null), 5000);
@@ -73,10 +74,10 @@ const App = () => {
           })
           .catch((error) => {
             setMessage({
-              message: `Failed to update ${newPerson.name}. Entry already removed from server`,
+              message: `Failed to update ${newPerson.name}. Error: ${error.response.data.error}`,
               type: "error",
             });
-            //setTimeout(() => setMessage(null), 5000);
+            setTimeout(() => setMessage(null), 5000);
           });
       }
     }
