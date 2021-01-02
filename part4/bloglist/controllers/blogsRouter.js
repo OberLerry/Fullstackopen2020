@@ -16,7 +16,6 @@ blogsRouter.get("/", async (request, response) => {
 blogsRouter.post("/", async (request, response) => {
   const blog = new Blog(request.body);
   const decodedToken = jwt.verify(request.token, process.env.SECRET);
-
   if (!request.token || !decodedToken.id) {
     return response
       .status(401)
@@ -28,8 +27,9 @@ blogsRouter.post("/", async (request, response) => {
     if (blog.title && blog.url) {
       const savedBlog = await blog.save();
       //user.blogs = user.blogs.concat(savedBlog._id);
+      const result = await savedBlog.execPopulate("user");
       await user.save();
-      response.status(201).json(savedBlog).end();
+      response.status(201).json(result).end();
     } else {
       response.status(400).json("error: Title and URL missing").end();
     }
@@ -64,6 +64,7 @@ blogsRouter.put("/:id", async (request, response) => {
     { likes: likes },
     { new: true }
   );
+  console.log(result);
   response.json(result);
 });
 
